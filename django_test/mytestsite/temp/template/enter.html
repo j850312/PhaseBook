@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+
+  <style>
+    th {
+      font-weight: bold;
+      background: #B5D4FC;
+      vertical-align: middle;
+      padding: 4px 10px 4px 5px;
+    }
+
+    td {
+      vertical-align: middle;
+      padding: 4px 10px 4px 5px;
+    }
+
+    #myCanvas {
+      border: 1px solid #666666;
+    }
+
+    input[type="checkbox"] {
+      display: none;
+    }
+
+    input[type="checkbox"]+label span {
+      display: inline-block;
+      width: 19px;
+      height: 19px;
+      margin: -2px 10px 1 1;
+      vertical-align: middle;
+      background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/check_radio_sheet.png) left top no-repeat;
+      cursor: pointer;
+    }
+
+    input[type="checkbox"]:checked+label span {
+      background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/check_radio_sheet.png) -19px top no-repeat;
+    }
+
+    #warp {
+      display: flex;
+    }
+
+    #div1,
+    #div2,
+    #div3,
+    #div4,
+    #div5,
+    #div6,
+    #div7,
+    #div8,
+    #div9,
+    #div10,
+    #div11,
+    #div12 {
+      display: inline-block;
+    }
+    #cut_1,
+    #cut_2,
+    #cut_3,
+    #cut_4,
+    #cut_5,
+    #cut_6,
+    #cut_7,
+    #cut_8,
+    #cut_9,
+    #cut_10,
+    #cut_11,
+    #cut_12 {
+      display: none;
+    }
+  </style>
+
+
+
+  <!--[if lt IE 9]>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+
+
+  <!-- Bootstrap -->
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<script>
+  function hide(a) {
+    var str = "cut_" + a;
+    var box = document.getElementById(str);
+    if (box.style.display == "block")
+      box.style.display = "none";
+    else
+      box.style.display = "block";
+
+  }
+</script>
+
+<body onload="init();">
+  <nav class="navbar navbar-default">
+
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+          data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a style="font-size: 16px  !important;" class="navbar-brand" href="/">
+          <font color="#457ab2">P</font>hase<font color="#457ab2">B</font>ook
+        </a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a href="/about">About</a></li>
+          <li><a href="/human">Human</a></li>
+          <li><a href="/enter">Baboon</a></li>
+
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <!-- 
+          <li><a href="/login">Login</a></li>
+           -->
+          <li><a href="/help">Help</a></li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+  <div id="main">
+    <center>
+      <title>Phasebook</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <h1 style="font-size:70px">
+        <font color="#457ab2">P</font>hase<font color="#457ab2">B</font>ook
+      </h1>
+      <h4>A Web Portal for Circadian Omic Baboon</h4><br><br>
+      <!--
+  <div id=temp class="row">
+  
+    <div id = sc  >
+    <font>Input tissue:</font><input id='tiss' size="30" type='search' placeholder='Enter tissue' onfocus="this.placeholder=''" onblur="this.placeholder='Enter tissue'">
+    </div>
+    <div id="org_div"></div>
+    <p> </p>
+    <div class="box box-default">
+    <button class="btn btn-app" type="button" onclick="set(0);"><i class="fa fa-search"></i>Add tissue
+
+    </button>
+  </div>
+-->
+
+      <div id="wrap" style="text-align:left;">
+
+        <div id="div1">
+          <button type="button" onclick="hide(1);"><img
+              src="https://png.pngtree.com/element_pic/16/11/27/dc2635ad57a062f81b57166b5acfda92.jpg"
+              style="width:100px;height:100px;text-align:center"></button>
+          <br>
+          <div id="cut_1">
+            <input type="checkbox" id="IRI" name="tissue_select" value="122" />
+            <label for="IRI"><span></span>IRI Iris</label>
+            <br>
+            <input type="checkbox" id="COR" name="tissue_select" value="74" />
+            <label for="COR"><span></span>COR Cornea</label>
+            <br>
+            <input type="checkbox" id="ONH" name="tissue_select" value="212" />
+            <label for="ONH"><span></span>ONH Optic Nerve Head</label>
+            <br>
+            <input type="checkbox" id="RET" name="tissue_select" value="272" />
+            <label for="RET"><span></span>RET Retina</label>
+            <br>
+            <input type="checkbox" id="RPE" name="tissue_select" value="278" />
+            <label for="RPE"><span></span>RPE Retinal Pigment Epithelium</label>
+          </div>
+        </div>
+
+        <div id="div2">
+          <button type="button" onclick="hide(2);"><img src="https://img95.699pic.com/photo/40008/7185.jpg_wh300.jpg"
+              style="width:100px;height:100px;text-align:center"></button>
+          <br>
+          <div id="cut_2">
+            <input type="checkbox" id="ADC" name="tissue_select" value="2" />
+            <label for="ADC"><span></span>ADC Adrenal Cortex</label>
+            <br>
+            <input type="checkbox" id="ADM" name="tissue_select" value="8" />
+            <label for="ADM"><span></span>ADM Adrenal Medulla</label>
+            <br>
+            <input type="checkbox" id="PIN" name="tissue_select" value="224" />
+            <label for="PIN"><span></span>PIN Pineal</label>
+            <br>
+            <input type="checkbox" id="PIT" name="tissue_select" value="230" />
+            <label for="PIT"><span></span>PIT Pituitary</label>
+            <br>
+            <input type="checkbox" id="THR" name="tissue_select" value="338" />
+            <label for="THR"><span></span>THR Thyroid</label>
+          </div>
+        </div>
+
+        <div id="div3">
+
+          <button type="button" onclick="hide(3);"><img src="https://img.lovepik.com/element/40179/5953.png_860.png"
+              style="width:100px;height:100px;text-align:center"></button>
+
+          <br>
+          <div id="cut_3">
+            <input type="checkbox" id="SPL" name="tissue_select" value="308" />
+            <label for="SPL"><span></span>SPL Spleen</label>
+            <br>
+            <input type="checkbox" id="AXL" name="tissue_select" value="44" />
+            <label for="AXL"><span></span>AXL Axillary Lymphonodes</label>
+            <br>
+            <input type="checkbox" id="BOM" name="tissue_select" value="56" />
+            <label for="BOM"><span></span>BOM Bone Marrow</label>
+            <br>
+            <input type="checkbox" id="MEL" name="tissue_select" value="164" />
+            <label for="MEL"><span></span>MEL Mesenteric Lymphonodes</label>
+            <br>
+          </div>
+        </div>
+        <div id="div4">
+          <button type="button" onclick="hide(4);"><img
+              src="https://purestyle-note.com/wp-content/uploads/2019/02/01-320x240.jpg"
+              style="width:100px;height:100px;text-align:center"></button>
+
+          <br>
+          <div id="cut_4">
+            <input type="checkbox" id="BLA" name="tissue_select" value="50" />
+            <label for="BLA"><span></span>BLA Bladder</label>
+            <br>
+            <input type="checkbox" id="KIC" name="tissue_select" value="128" />
+            <label for="KIC"><span></span>KIC Kidney Cortex</label>
+            <br>
+            <input type="checkbox" id="KIM" name="tissue_select" value="134" />
+            <label for="KIM"><span></span>KIM Kidney Medulla</label>
+            <br>
+          </div>
+        </div>
+
+
+        <div id="div5">
+          <button type="button" onclick="hide(5);"><img
+              src="https://img95.699pic.com/element/40162/8601.png_300.png!/clip/0x300a0a0"
+              style="width:100px;height:100px;text-align:center"></button>
+
+          <br>
+          <div id="cut_5">
+            <input type="checkbox" id="HEA" name="tissue_select" value="104" />
+            <label for="HEA"><span></span>HEA Heart</label>
+            <br>
+            <input type="checkbox" id="AOR" name="tissue_select" value="26" />
+            <label for="AOR"><span></span>AOR Aorta</label>
+            <br>
+            <input type="checkbox" id="MUA" name="tissue_select" value="182" />
+            <label for="MUA"><span></span>MUA Muscle Abdominal</label>
+            <br>
+            <input type="checkbox" id="MUG" name="tissue_select" value="188" />
+            <label for="MUG"><span></span>MUG Muscle Gastrocnemian</label>
+            <br>
+          </div>
+        </div>
+
+        <div id="div6">
+          <button type="button" onclick="hide(6);"><img
+              src="https://image.16pic.com/00/93/35/16pic_9335009_s.png?imageView2/0/format/png"
+              style="width:100px;height:100px;text-align:center"></button>
+
+          <br>
+          <div id="cut_6">
+            <input type="checkbox" id="ANT" name="tissue_select" value="20" />
+            <label for="ANT"><span></span>ANT Antrum</label>
+            <br>
+            <input type="checkbox" id="OES" name="tissue_select" value="194" />
+            <label for="OES"><span></span>OES Oesophagus</label>
+            <br>
+            <input type="checkbox" id="SMM" name="tissue_select" value="296" />
+            <label for="SMM"><span></span>SMM smooth muscle</label>
+            <br>
+            <input type="checkbox" id="STF" name="tissue_select" value="314" />
+            <label for="STF"><span></span>STF Stomach Fundus</label>
+            <br>
+            <input type="checkbox" id="ILE" name="tissue_select" value="116" />
+            <label for="ILE"><span></span>ILE Ileum</label>
+            <br>
+            <input type="checkbox" id="DUO" name="tissue_select" value="92" />
+            <label for="DUO"><span></span>DUO Duodenum</label>
+            <br>
+            <input type="checkbox" id="DEC" name="tissue_select" value="80" />
+            <label for="DEC"><span></span>DEC Descending Colon</label>
+            <br>
+            <input type="checkbox" id="CEC" name="tissue_select" value="62" />
+            <label for="CEC"><span></span>CEC Cecum</label>
+            <br>
+            <input type="checkbox" id="ASC" name="tissue_select" value="38" />
+            <label for="ASC"><span></span>ASC Ascending Colon</label>
+            <br>
+          </div>
+        </div>
+        <div id="div7">
+
+          <button type="button" onclick="hide(7);"><img src="https://en.pimg.jp/038/500/440/1/38500440.jpg"
+              style="width:100px;height:100px;text-align:center"></button>
+
+          <br>
+          <div id="cut_7">
+            <input type="checkbox" id="AMY" name="tissue_select" value="14" />
+            <label for="AMY"><span></span>AMY Amygdala</label>
+            <br>
+            <input type="checkbox" id="ARC" name="tissue_select" value="32" />
+            <label for="ARC"><span></span>ARC Arcuate Nucleus</label>
+            <br>
+            <input type="checkbox" id="CER" name="tissue_select" value="68" />
+            <label for="CER"><span></span>CER Crebellum</label>
+            <br>
+            <input type="checkbox" id="DMH" name="tissue_select" value="86" />
+            <label for="DMH"><span></span>DMH Dorsomedial Hypothalamus</label>
+            <br>
+            <input type="checkbox" id="HAB" name="tissue_select" value="98" />
+            <label for="HAB"><span></span>HAB Habenula</label>
+            <br>
+            <input type="checkbox" id="HIP" name="tissue_select" value="110" />
+            <label for="HIP"><span></span>HIP Hippocampus</label>
+            <br>
+            <input type="checkbox" id="LGP" name="tissue_select" value="140" />
+            <label for="LGP"><span></span>LGP Lateral Globus Pallidus</label>
+            <br>
+            <input type="checkbox" id="LH" name="tissue_select" value="146" />
+            <label for="LH"><span></span>LH Lateral Hypothalamus</label>
+            <br>
+            <input type="checkbox" id="MGP" name="tissue_select" value="170" />
+            <label for="MGP"><span></span>MGP Medial Globus Pallidus</label>
+            <br>
+            <input type="checkbox" id="MMB" name="tissue_select" value="176" />
+            <label for="MMB"><span></span>MMB Mammilary Bulib</label>
+            <br>
+
+            <input type="checkbox" id="OLB" name="tissue_select" value="200" />
+            <label for="OLB"><span></span>OLB Olfactory Bulb</label>
+            <br>
+            <input type="checkbox" id="PON" name="tissue_select" value="236" />
+            <label for="PON"><span></span>PON Pons</label>
+            <br>
+            <input type="checkbox" id="PRA" name="tissue_select" value="242" />
+            <label for="PRA"><span></span>PRA Preoptic Area </label>
+            <br>
+            <input type="checkbox" id="PRC" name="tissue_select" value="248" />
+            <label for="PRC"><span></span>PRC Prefrontal Cortex</label>
+            <br>
+            <input type="checkbox" id="PUT" name="tissue_select" value="260" />
+            <label for="PUT"><span></span>PUT Putamen</label>
+            <br>
+            <input type="checkbox" id="PVN" name="tissue_select" value="266" />
+            <label for="PVN"><span></span>PVN Paraventricular Nuclei</label>
+            <br>
+            <input type="checkbox" id="SCN" name="tissue_select" value="284" />
+            <label for="SCN"><span></span>SCN Suprachiasmatic Nuclei</label>
+            <br>
+            <input type="checkbox" id="SON" name="tissue_select" value="302" />
+            <label for="SON"><span></span>SON Supraoptic Nigra</label>
+            <br>
+            <input type="checkbox" id="THA" name="tissue_select" value="332" />
+            <label for="THA"><span></span>THA Thalamus</label>
+            <br>
+            <input type="checkbox" id="VIC" name="tissue_select" value="344" />
+            <label for="VIC"><span></span>VIC Visual Cortex</label>
+            <br>
+            <input type="checkbox" id="VMH" name="tissue_select" value="350" />
+            <label for="VMH"><span></span>VMH Ventromedial Hypothalamus</label>
+            <br>
+          </div>
+        </div>
+
+        <div id="div8">
+
+          <button type="button" onclick="hide(8);"><img
+              src="https://pic.52112.com/180720/EPS-180720_155/hg8tHnbZhX_small.jpg"
+              style="width:100px;height:100px;text-align:center"></button>
+
+          <br>
+          <div id="cut_8">
+            <input type="checkbox" id="LUN" name="tissue_select" value="158" />
+            <label for="LUN"><span></span>LUN Lung</label>
+
+          </div>
+        </div>
+
+        <div id="div9">
+
+          <button type="button" onclick="hide(9);"><img src="https://img95.699pic.com/element/40179/6002.png_300.png"
+              style="width:100px;height:100px;text-align:center"></button>
+
+          <br>
+          <div id="cut_9">
+            <input type="checkbox" id="LIV" name="tissue_select" value="152" />
+            <label for="LIV"><span></span>LIV Liver</label>
+            <br>
+          </div>
+        </div>
+        <div id="div10">
+
+          <button type="button" onclick="hide(10);"><img src="https://pic.pimg.tw/shun893/1353846035-4136324569.jpg"
+              style="width:100px;height:100px;text-align:center"></button>
+
+          <br>
+          <div id="cut_10">
+            <input type="checkbox" id="PAN" name="tissue_select" value="218" />
+            <label for="PAN"><span></span>PAN Pancreas</label>
+            <br>
+          </div>
+        </div>
+        <div id="div11">
+
+          <button type="button" onclick="hide(11);"><img
+              src="https://img.lovepik.com/free-png/20220127/lovepik-skin-sun-protection-png-image_401917888_wh300.png"
+              style="width:100px;height:100px;text-align:center"></button>
+
+          <br>
+          <div id="cut_11">
+            <input type="checkbox" id="SKI" name="tissue_select" value="290" />
+            <label for="SKI"><span></span>SKI Skin</label>
+            <br>
+          </div>
+        </div>
+      </div>
+
+      <p> </p>
+      <div class="row">
+        <div id="genename_div"></div>
+        <br>
+        <div id="geneid_div"></div>
+        <br>
+        <div class="box box-default">
+          <button class="btn btn-app" type="button" onclick="set(1);"><i class="fa fa-search"></i>Add gene
+
+          </button>
+          <button class="btn btn-app" type="button" onclick="back();"><i class="fa fa-search"></i>Back
+          </button>
+        </div>
+        <br>
+        <font>Select Gene Name:</font><input id='gene_name' size="70" readonly="readonly" type="search"
+          placeholder="Enter gene name" onfocus="this.placeholder=''" onblur="this.placeholder='Enter Gene Name'">
+
+        <p> </p>
+
+      </div>
+      <p> </p>
+      <div class="box box-default">
+        <button class="btn btn-app" type="button" onclick="plot();"><i class="fa fa-search"></i>Draw
+
+        </button>
+        
+      </div>
+      <div id='myDiv'>
+        <!-- Plotly chart will be drawn inside this DIV -->
+      </div>
+      <div id='show'></div>
+  </div>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-1.2.0.min.js"></script>
+  <script src="http://requirejs.org/docs/release/2.1.5/r.js"></script>
+
+  <script language="JavaScript" type="text/javascript">
+    var count = 2;
+    var ct = 1;
+    function back()
+    {
+      var t = document.getElementById("gene_name");
+      var str2 = document.getElementById("gene_name").value;
+      var str=new Array();
+      var temp="";
+      //console.log(str2);
+      str=str2.split(',');
+      //console.log(str);
+      if(str=="")
+      {
+       temp="";
+      }
+      else if(str.length==1)
+      {
+        temp="";
+        
+      }
+      else
+      {
+        console.log(temp);
+      for(var i=0;i<str.length;i++)
+        {
+          if(i==str.length-2)
+          {
+            temp+=str[i];
+            break;
+          }
+          else
+            temp+=str[i]+",";
+          //console.log(temp);          
+        }
+      }
+      t.value=temp;
+    }
+    function init() {
+      getlist();
+    }
+    function set(i) {
+
+      if (i == 0) {
+        var t = document.getElementById("tiss");
+        var str1 = document.getElementById("tiss").value;
+        var tis = document.getElementById("genelist0").value;
+        //console.log(str1);
+        if (!tis)
+          str1 = str1;
+        else if (str1 == "")
+          str1 += tis;
+        else
+          str1 += "," + tis;
+        t.value = str1;
+      }
+      else {
+        var t = document.getElementById("gene_name");
+        var str2 = document.getElementById("gene_name").value;
+        var gene = document.getElementById("genelist").value;
+        if (!gene)
+          str2 = str2;
+        else if (str2 == "")
+          str2 += gene;
+        else
+          str2 += "," + gene;
+
+        t.value = str2;
+      }
+    }
+
+    function plot() {
+
+      //var str1 = document.getElementById("tiss").value;
+      var str2 = document.getElementById("gene_name").value;
+      var data = JSON.parse({{ data| safe}});
+    //var data_point = JSON.parse({{ data_point| safe}});
+    //var point=JSON.parse({{point|safe}});
+    var ogdic = {{ ogdic| safe}};
+    var genedic = {{ genedic| safe}};
+    var name_tis = new Array();
+    var name_gene = new Array();
+    var tp = [];
+    var temp;
+    var point = "";
+    var str_show = "";
+    var col=['red','rgb(0, 204, 0)','rgb(0, 48, 240)','rgb(215, 11, 11)','black','rgb(0, 0, 0)','blue','orange'];
+    $('#show').html("");
+    str_show = "<table border='1' style='text-align:center'>";
+    str_show += "<tr>";
+    str_show += "<th style='padding:4px 10px 4px 5px;'>Gene</th>";
+    str_show += "<th style='padding:4px 10px 4px 5px;'>Tissue</th>";
+    str_show += "<th style='padding:4px 10px 4px 5px;'>P-value</th>";
+    str_show += "<th style='padding:4px 10px 4px 5px;'>Q-value</th>";
+    str_show += "<th style='padding:4px 10px 4px 5px;'>Period</th>";
+    str_show += "<th style='padding:4px 10px 4px 5px;'>Phase</th>";
+    str_show += "<th style='padding:4px 10px 4px 5px;'>Base</th>";
+    str_show += "<th style='padding:4px 10px 4px 5px;'>Amplitude</th>";
+    str_show += "</tr>";
+    //console.log(typeof(str1));
+    //name_tis = str1.split(",");
+    temp = get_org();
+    name_tis = temp.split(",");
+    name_gene = str2.split(",");
+
+    for (var i = 0; i < name_gene.length; i++) {
+      for (var j = 0; j < name_tis.length; j++) {
+        var period = data["data"][genedic[name_gene[i]] + 1][ogdic[name_tis[j]] + 2];
+        var phase = data["data"][genedic[name_gene[i]] + 1][ogdic[name_tis[j]] + 3];
+        var base = data["data"][genedic[name_gene[i]] + 1][ogdic[name_tis[j]] + 4];
+        var amplitude = data["data"][genedic[name_gene[i]] + 1][ogdic[name_tis[j]] + 5];
+        var pvalue = data["data"][genedic[name_gene[i]] + 1][ogdic[name_tis[j]]];
+        var qvalue = data["data"][genedic[name_gene[i]] + 1][ogdic[name_tis[j]] + 1];
+        //console.log(period+","+phase+","+base+","+amplitude);
+
+        str_show += "<tr>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + name_gene[i] + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + name_tis[j] + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + pvalue + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + qvalue + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + period + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + phase + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + base + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + amplitude + "</td>";
+        str_show += "</tr>";
+        var x = []
+        var y = []
+        for (var s = 0; s < 24; s += 0.1) {
+          x.push(Number(amplitude) * Math.sin(2 * Math.PI * (s - Number(phase)) / 24 * Number(period) / 24) + Number(base))
+          //x.push(amplitude*Math.sin(2*Math.PI*(i-phase)/24*period/24)+base)
+          y.push(s)
+        }
+
+        //console.log(i+j);
+        var tp1 = { x: y, y: x, type: 'lines', name: name_tis[j] + "," + name_gene[i],marker: { color:col[i*name_gene.length+j] } };
+        tp.push(tp1);
+        //document.write(str1.split(",")+"<p>");
+      }
+    }
+    var tp2;
+    //point=ajax_getpoint(name_gene,name_tis);
+    //console.log(name_tis,name_gene);
+    $.ajax({
+      type: "POST",
+      url: "/get_point_ajax/",
+      data: { gene: JSON.stringify(name_gene), tis: JSON.stringify(name_tis) },
+      dataType: "json",
+      success: function (data) {
+          //console.log(data);
+          var temp=String(data.ans);
+          
+          var temp1=temp.split(",");
+          temp1=temp1
+          //console.log(temp1);
+            for (var i = 0; i < name_gene.length; i++) 
+            {
+              for(var j = 0; j < name_tis.length; j++)
+              {
+                x = [];
+                y = [];
+                for (var b = 0; b < 12; b++) {
+                  x.push(b * 2);
+                  if(i>0 || j>0)
+                  {
+                      y.push(temp1[i*name_tis.length*12+j*12+b]);
+                      //console.log(y);
+                  }
+                  else
+                    y.push(temp1[b]);
+                }
+                //console.log(i+j);
+                tp2 = { x: x, y: y, type:'scatter' ,mode: 'markers', name: name_tis[j] + "," + name_gene[i], marker: { color:col[i*name_gene.length+j] } };
+                tp.push(tp2);
+              }
+            }
+            
+
+        var layout = {
+          title: 'Baboon Circadian'
+        };
+        console.log(tp);
+        Plotly.newPlot('myDiv', tp, layout);
+
+
+        str_show += "</table>";
+        $('#show').append(str_show);
+      }
+    });
+
+    
+    
+  }
+
+    function get_org() {
+      var chk_value = [];
+      var org_str;
+      var tags = document.getElementsByTagName('input');
+
+      for (var i = 0; i < tags.length; i++) {
+        if (tags[i].name.substr(0, 13) == "tissue_select") {
+          if (tags[i].checked) {
+            if (!org_str)
+              org_str = tags[i].id;
+            else if (org_str == "")
+              org_str = tags[i].id;
+            else
+              org_str += "," + tags[i].id;
+          }
+        }
+      }
+
+      return org_str;
+    }
+    function getlist() {
+      $('#geneid_div').html("");
+      $('#genename_div').html("");
+
+      //var gene_id = {{ gene_id| safe}};
+      var gene_name = {{ gene_name| safe}};
+
+    var temp;
+    var geneidstr, genenamestr;
+
+    //geneidstr = "<font size=3>Select gene names:</font><input type='text' list='' id='genelist2' multiple>"
+    
+    genenamestr = "<font size=3>Select Gene Names:</font><input type='text' size=30 list='genelist_1' id='genelist1' onchange='getidlist(this.value,1);' multiple><datalist id='genelist_1'>";
+    //genenamestr = "<font>Gene quick search:</font><input type='text' size=50 list='genelist_1' id='genelist1' onchange='getidlist(this.value,1);' multiple><datalist id='genelist_1'>";
+
+
+    for (var i = 0; i < (gene_name.length); i++) {
+      //genenamestr += "<option value='" + gene_id[i] + "'>" + gene_id[i] + "</option>";
+      genenamestr += "<option value='" + gene_name[i] + "'>" + gene_name[i] + "</option>";
+    }
+    genenamestr += "</datalist>";
+    //orgstr += "</datalist>";
+    //$('#org_div').append(orgstr);
+   
+    var str="";
+        str="<font size=3>Select Gend ID:</font><input type='text' list='geneidlist'"+"size=30 id='genelist"+"'multiple>";
+        str+="<datalist id='geneidlist"+"' name='geneidlist'>";
+      str+="</datalist><br>";
+      //console.log(str);
+        $('#genename_div').append(genenamestr);
+        $('#geneid_div').append(str);
+    }
+
+    function getidlist(id,check){
+      $('#geneid_div').html("");
+      var gndic = {{ gndic| safe}};
+      var gene_name = {{ gene_name| safe}};
+      let findkey = (value, compare = (a, b) => a === b) =>{
+      return Object.keys(gndic).find(k => compare(gndic[k], value))
+    }
+      var str="";
+
+      
+        str="<font size=3>Select Gend ID:</font><input type='text' list='geneidlist'"+" size=30 id='genelist"+"'multiple>";
+        str+="<datalist id='geneidlist"+"' name='geneidlist'>";
+
+      
+      var ans=gndic[id];
+      for(var i=0;i<ans.length;i++)
+      {
+        str+="<option value='" + ans[i] + "'>" + ans[i] + "</option>";
+        //console.log(ans[i]);
+      }
+      str+="</datalist><br>";
+      //console.log(str);
+
+        $('#geneid_div').append(str);
+    }
+
+  </script>
+
+  </center>
+  </div>
+</body>
+
+</html>

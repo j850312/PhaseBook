@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+
+  <style>
+    body {
+      margin: 10px;
+      padding: 0px;
+    }
+    table{
+   	border-collapse: collapse;
+   	width: 550px; 	
+   	/*自動斷行*/
+   	word-wrap: break-word;
+   	table-layout: fixed;
+   }
+    input[type="range"]{
+    -webkit-appearance: none;
+    overflow:hidden;     /* 限定範圍 */
+    width:200px;
+    height:20px;
+    outline : none;      /* 避免點選會有藍線或虛線 */
+    background:none;
+    }
+    #myCanvas {
+      border: 1px solid #666666;
+    } 
+    #IsShowCommission input[type=checkbox] {
+               
+               vertical-align:middle;
+               margin-top: -2px;
+               text-align:left;
+               margin-bottom: 1px;
+           }
+  </style>
+
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet"
+        href="/static/main.css">
+  
+  
+  
+      <!--[if lt IE 9]>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+  
+  
+  
+      <!-- Bootstrap -->
+      <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet"
+        href="/static/main.css">
+</head>
+
+<body onload="init();">
+  <nav class="navbar navbar-default">
+
+    <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a  style="font-size: 16px  !important;" class="navbar-brand" href="/"><font color="#457ab2">P</font>hase<font color="#457ab2">B</font>ook</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="/about">About</a></li>
+        <li><a href="/human">Human</a></li>
+        <li><a href="/enter">Baboon</a></li>
+
+       
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+
+        <li><a href="/help">Help</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+  <div id="main" class="container-fluid">
+    <center>
+  <title>Phasebook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <h1 style="font-size:70px"><font color="#457ab2">P</font>hase<font color="#457ab2">B</font>ook</h1>
+  <h4>A Web Portal for Circadian Omic </h4><br><br>
+
+
+  <div id=temp class="row">
+
+    <div id="org_div"></div>
+    <p> </p>
+    <div class="box box-default">
+  </div>
+</div>
+<p> </p>
+<div class="row">
+<div id="geneid_div"></div>
+<p> </p>
+<div class="box box-default">
+  <form>
+<input type="checkbox" value="1" name="Product_1" > 0-45 years old<br>
+<input type="checkbox" value="2" name="Product_1" > 45-55 years old<br>
+<input type="checkbox" value="3" name="Product_1" > 55-65 years old<br>
+<input type="checkbox" value="4" name="Product_1" > 65 and above years old<br>
+</div>
+</div>
+
+
+<p> </p>
+<div class="box box-default">
+      <button class="btn btn-app" type="button" onclick="plot(this.form);"><i class="fa fa-search"></i>Draw
+
+      </button>
+    </div>
+  </form>
+     <div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+  <div id='show'></div>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-1.2.0.min.js"></script>
+  <script language="JavaScript" type="text/javascript">
+    var count=2;
+    var ct=1;
+    function init() {
+      getlist();
+    }
+
+
+    function plot(temp){
+     // $("input[name='Product_1']").prop("checked", true);
+      var df_donors;
+      var tp;
+      var str1=document.getElementById("genelist0").value;
+      var str2=document.getElementById("genelist1").value;
+      var probeid;
+      var df_expression;
+      var period,phase,amplitude,base;
+      var data,data1,data2,data3,data4;
+      var group=[];
+      var gp=[],gp1=[],gp2=[],gp3=[],gp4=[];
+      var group1=[];
+      var group2=[];
+      var group3=[];
+      var group4=[];
+      var age,cho_color;
+      var color=['rgb(0, 204, 0)','rgb(0, 48, 240)','rgb(215, 11, 11)','rgb(0, 0, 0)'];
+      var str_show="";
+      $('#show').html("");
+      str_show="<table border='1'>";
+      if(str1=="BA11")
+      {
+        df_expression = JSON.parse({{ df_expression_11 | safe}});
+        df_donors= JSON.parse({{ df_donors| safe}});
+        data1=JSON.parse({{data|safe}});
+        data2=JSON.parse({{data1|safe}});
+        data3=JSON.parse({{data2|safe}});
+        data4=JSON.parse({{data3|safe}});
+      }
+      else
+      {
+        df_expression = JSON.parse({{ df_expression_47| safe}});
+        df_donors= JSON.parse({{ df_donors1| safe}});
+        data1=JSON.parse({{data4|safe}});
+        data2=JSON.parse({{data5|safe}});
+        data3=JSON.parse({{data6|safe}});
+        data4=JSON.parse({{data7|safe}});
+      }
+      for(var m=0;m<146;m++)
+      {
+        if(df_donors["data"][m][0]<45)
+        {
+          group1.push(df_donors["data"][m][20]);
+          gp1.push(df_donors["data"][m][19]);
+        }
+        else if(df_donors["data"][m][0]>=45 && df_donors["data"][m][0]<55)
+        {
+          group2.push(df_donors["data"][m][20]);
+          gp2.push(df_donors["data"][m][19]);
+        }
+        else if(df_donors["data"][m][0]>=55 && df_donors["data"][m][0]<65)
+        {
+          group3.push(df_donors["data"][m][20]);
+          gp3.push(df_donors["data"][m][19]);
+        }
+        if(df_donors["data"][m][0]>=65)
+        {
+          group4.push(df_donors["data"][m][20]);
+          gp4.push(df_donors["data"][m][19]);
+        }
+        
+      }
+
+      console.log(df_expression);
+      //console.log(df_donors);
+      //console.log(data1);
+      var tp=[];
+      var obj=temp.Product_1;
+      for(var i=0;i<obj.length;i++)
+      {
+        if (obj[i].checked) {
+          
+          console.log(obj[i].value);
+          if(obj[i].value==1)
+          {
+            data=data1;
+            age="age:0-45";
+            gp=gp1;
+            group=group1;
+          }
+          else if(obj[i].value==2)
+          {
+            data=data2;
+            age="age:45-55";
+            gp=gp2;
+            group=group2;
+          }
+          else if(obj[i].value==3)
+          {
+            data=data3;
+            age="age:55-65";
+            gp=gp3;
+            group=group3;
+          }
+          else if(obj[i].value==4)
+          {
+            gp=gp4;
+            group=group4;
+            data=data4;
+            age="age:65 and above";
+          }
+
+      var tep=[];
+      for(var a=0;a<20148;a++)
+      {
+        if(data["data"][a][1]==str2)
+        {
+          //console.log(data1["data"][a][1]);
+          probeid=data["data"][a][0];
+          period=data["data"][a][4];
+          phase=data["data"][a][5];
+          base=data["data"][a][6];
+          amplitude=data["data"][a][3];
+          break;
+        }
+        
+      }
+      for(var ee=0;ee<20148;ee++)
+      {
+        //console.log(df_expression["data"][ee][146]);
+        //console.log(probeid);
+        if(df_expression["data"][ee][146]==probeid)
+        {
+          //console.log(probeid);
+          for(var dd=0;dd<146;dd++)
+            {
+              for(var ss=0;ss<group.length;ss++)
+                {
+              //console.log(df_expression["columns"][dd]);
+              //console.log(group[ss]);
+                  if(df_expression["columns"][dd]==group[ss])
+                  {
+                    //console.log(df_expression["data"][ee][dd]);
+                    tep.push(df_expression["data"][ee][dd]);
+                  }
+               }
+            }
+        break;
+      }
+          
+      }
+
+      console.log(period+","+phase+","+base+","+amplitude);
+      var x=[]
+      var y=[]
+        for(var s=-6;s<18;s+=0.1)
+      {
+        x.push(Number(amplitude)*Math.sin(2*Math.PI*Number(period)*(s/24)+Number(phase))+Number(base))
+      //x.push(Number(amplitude)*Math.sin(2*Math.PI*(s-Number(phase))/24*Number(period)/24)+Number(base))
+      //x.push(amplitude*Math.sin(2*Math.PI*(i-phase)/24*period/24)+base)
+      y.push(s)
+      }
+
+   
+    console.log(df_expression);
+    console.log(tep);
+    console.log(gp);
+
+    var trace2={x: gp,y: tep,mode: 'markers',marker: { size: 10 ,colors : color[i]}, name:age};
+    tp.push(trace2);
+    var tp1={x: y,y: x,mode: 'lines',name:str2,marker:{colors:color[i]}};
+        tp.push(tp1);
+        var mean=tep.reduce((a, b) => a + b) / tep.length;
+      mean=mean.toFixed(4);
+    var R_square=data["data"][a][7];
+    R_square=R_square.toFixed(4);
+    str_show+="<tr><td>   "+age +" </td><td> mean = "+mean+" </td><td> R_square ="+R_square+"</td></tr>";
+      }
+    }
+    
+    
+    str_show+="</table>";
+    $('#show').append(str_show);
+      var layout = {
+    title:'Circadian'
+    };
+
+     Plotly.newPlot('myDiv', tp, layout);
+    }
+    
+    function getlist() {
+      $('#org_div').html("");
+      $('#genename_div').html("");
+
+    var gene_id = {{ gene| safe}};
+    var orgstr,orgstr1,istr;
+    var geneidstr,genenamestr,genenamestr1;
+    //istr="<input type='search' placeholder='Enter tissue' onfocus='this.placeholder=''' onblur='this.placeholder='Enter tissue''>";
+    orgstr = "<font>Input tissue:</font><input type='text' list='genelist_0' id='genelist0' onblur='this.placeholder='Quick search using tissue keywords'' multiple><datalist id='genelist_0' >";
+    //geneidstr = "<font size=3>請選擇基因編號:</font><input type='text' list='' id='genelist2' multiple>"
+
+    genenamestr = "<font>Input gene:</font><input type='text' list='genelist_1' id='genelist1' multiple><datalist id='genelist_1'>";
+    o=["BA11","BA47"]; 
+    for (var i = 0; i < 2; i++) {
+      orgstr+="<option value='" + o[i] + "'>" + o[i] + "</option>";
+    }
+    for (var i = 0; i < (gene_id.length); i++) {
+      genenamestr += "<option value='" + gene_id[i] + "'>" + gene_id[i] + "</option>";
+    }
+    genenamestr += "</datalist>";
+    orgstr+="</datalist>";
+    $('#org_div').append(orgstr);
+    $('#geneid_div').append(genenamestr);
+    //$('#input').append(istr);
+    }
+
+    </script>
+  
+    </center>
+  </div>
+</body>
+
+</html>

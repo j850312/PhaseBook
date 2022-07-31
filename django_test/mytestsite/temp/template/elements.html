@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+
+  <style>
+    th {
+      font-weight: bold;
+      background: #B5D4FC;
+      vertical-align: middle;
+      padding: 4px 10px 4px 5px;
+    }
+    body {
+      margin: 10px;
+      padding: 0px;
+    }
+    .switch { /*==設定開關鈕的長寬==*/
+  position: relative;
+  width: 60px;
+  height: 30px;
+  line-height: 30px;
+}
+.switch-checkbox {
+ position: absolute;
+ display: none;
+}
+.switch-label {
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 20px;
+}
+.switch-txt {
+  display: block;
+  width: 200%;
+  margin-left: -100%;
+  transition: margin 0.3s ease-in 0s;
+}
+.switch-txt::before,
+.switch-txt::after {
+  display: block;
+  float: right;
+  width: 50%;
+  font-size: 13px;
+  color: #eee;;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+/*==開關鈕底色(開啟時)==*/
+.switch-txt::after {
+  content: attr(turnOn);
+  padding-left: 15px;
+  background: #1ba0ef;
+  color: #eee;
+  text-align: left;
+}
+/*開關鈕底色(關閉時)*/
+.switch-txt::before {
+  content: attr(turnOff);
+  padding-right: 10px;
+  background: rgb(238, 238, 238);
+  color: #ccc;
+  text-align: right;
+}
+/*==開關鈕的顏色與大小==*/
+.switch-Round-btn {
+  position: absolute;
+  display: block;
+  width: 26px;
+  height: 26px;
+  margin: 2px;
+  background:#D3D3D3;
+  top: 0;
+  bottom: 0;
+  right: 35px;
+  border-radius: 13px;
+  transition: all 0.3s ease-in 0s;
+}
+.switch-checkbox:checked + .switch-label .switch-txt {
+  margin-left: 0;
+}
+.switch-checkbox:checked + .switch-label .switch-Round-btn{
+  right: 0;
+}
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: rgba(255, 255, 255, .8) url('http://i.stack.imgur.com/FhHRx.gif') 50% 50% no-repeat;
+    }
+
+    /* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+    body.loading .modal {
+      overflow: hidden;
+    }
+
+    /* Anytime the body has the loading class, our
+   modal element will be visible */
+    body.loading .modal {
+      display: block;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 550px;
+      /*自動斷行*/
+      word-wrap: break-word;
+      table-layout: fixed;
+    }
+
+    input[type="range"] {
+      overflow: hidden;
+      /* 限定範圍 */
+      width: 50px;
+      height: 20px;
+      outline: none;
+      /* 避免點選會有藍線或虛線 */
+      background: none;
+    }
+
+    #myCanvas {
+      border: 1px solid #666666;
+    }
+
+    #myRange {
+
+      width: 300px;
+    }
+
+    #IsShowCommission input[type=checkbox] {
+
+      vertical-align: middle;
+      margin-top: -2px;
+      text-align: left;
+      margin-bottom: 1px;
+    }
+    #warp{display: flex; justify-content: center;}
+  </style>
+
+
+  <!-- Bootstrap -->
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+
+
+<body onload="init();">
+  <div class="modal" id="wait"><!-- Place at bottom of page --></div>
+  <nav class="navbar navbar-default">
+
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+          data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a style="font-size: 16px  !important;" class="navbar-brand" href="/">
+          <font color="#457ab2">P</font>hase<font color="#457ab2">B</font>ook
+        </a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a href="/about">About</a></li>
+          <li><a href="/datasets">Human</a></li>
+          <li><a href="/datasets">Baboon</a></li>
+
+
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+
+          <li><a href="/help">Help</a></li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+  <div id="main" class="container-fluid">
+    <center>
+      <title>Phasebook</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <h1 style="font-size:70px">
+        <font color="#457ab2">P</font>hase<font color="#457ab2">B</font>ook
+      </h1>
+      <h4>A Web Portal for Circadian Omic Human</h4><br><br>
+
+
+      <div id=temp class="row">
+
+        <div id="org_div"></div>
+        <p> </p>
+        <div class="box box-default">
+        </div>
+      </div>
+      <p> </p>
+      <div class="row">
+        <div id="geneid_div"></div>
+        <p> </p>
+      </div>
+      <form>
+        
+
+      <br>
+        <input type="checkbox" value="M" name="sex"> Man<br>
+        <input type="checkbox" value="F" name="sex"> Woman<br>
+
+        <div id=warp>
+          <span>Select Varible Age:</span>
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+          <div class="switch">
+            <input class="switch-checkbox" id="switchID1" type="checkbox" name="switch-checkbox" checked>
+            <label class="switch-label" for="switchID1">
+                <span class="switch-txt" turnOn="On" turnOff="Off"></span>
+                <span class="switch-Round-btn"></span>
+            </label>
+        </div>
+  
+    </div>
+
+
+        <div class="slidecontainer" id="age_range">
+          <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+          <p>Select Age Value: <span id="demo"></span></p>
+        </div>
+
+        <p> </p>
+        <div class="box box-default">
+          <button class="btn btn-app" type="button" onclick="plot(this.form);"><i class="fa fa-search"></i>Draw
+          </button>
+        </div>
+      </form>
+      <div id='myDiv'>
+        <!-- Plotly chart will be drawn inside this DIV -->
+      </div>
+      <div id='show'></div>
+
+
+  </div>
+
+  <script>
+    var slider1 = document.getElementById("myRange");
+    var demo = document.getElementById("demo");
+    demo.innerHTML = slider1.value;
+
+    slider1.oninput = function () {
+      demo.innerHTML = this.value;
+    }
+
+  
+</script>
+
+
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-1.2.0.min.js"></script>
+  <script language="JavaScript" type="text/javascript">
+  $("#switchID1").change(function()
+{
+  var age_range = document.getElementById('age_range');
+      if(this.checked)
+    {
+      age_range.style.display = "";
+    }
+  else
+    {
+      age_range.style.display = "none";
+    }
+
+ });
+    var count = 2;
+    var ct = 1;
+    function init() {
+      getlist();
+    }
+    function get_sex() {
+      var sex_str = "";
+      var tags = document.getElementsByTagName('input');
+      var no_seclect = 0;
+      for (var i = 0; i < tags.length; i++) {
+        if (tags[i].name.substr(0, 3) == "sex") {
+          if (tags[i].checked) {
+            if (sex_str == "")
+              sex_str = tags[i].value;
+            else
+              sex_str += "," + tags[i].value;
+            no_seclect = 1;
+          }
+        }
+      }
+      if (no_seclect == 0)
+        return "X";
+      else
+        return sex_str;
+    }
+
+    function plot(temp) {
+      // $("input[name='Product_1']").prop("checked", true);
+      var df_donors;
+      var tp = [], tp1, tp2;
+      var str1 = document.getElementById("genelist0").value;
+      var str2 = document.getElementById("genelist1").value;
+      var probeid;
+      var df_expression;
+      var period, phase, amplitude, base;
+      var data;
+      var group_x, group_y = [];
+
+
+      var age, cho_color;
+      var col = ['rgb(0, 204, 0)', 'rgb(0, 48, 240)', 'rgb(215, 11, 11)', 'rgb(0, 0, 0)'];
+      var str_show = "";
+      $('#show').append(str_show);
+      str_show = "<table border='1'>";
+      var slider1 = document.getElementById("myRange");
+      var sex = get_sex();
+      var str_tp,str_show;
+      var check_age=document.getElementById('age_range');
+      var age ;
+      var org_select = document.getElementById("genelist0").value;;
+        //console.log(sex);
+    var point_x, point_y;
+        
+    var gene = document.getElementById("genelist1").value;
+
+    if(check_age.style.display=="")
+      age=slider1.value;
+    else
+        age=-1;
+    //console.log(age);
+    $('#show').html("");
+    str_show = "<table border='1' style='text-align:center'>";
+    str_show += "<tr>";
+    str_show += "<th style='padding:4px 10px 4px 5px;'>Gene</th>";
+    str_show += "<th style='padding:4px 10px 4px 5px;'>Varible</th>";
+    str_show += "<th style='padding:4px 10px 4px 5px;'>Frequence</th>";
+    str_show += "<th style='padding:4px 10px 4px 5px;'>Shift</th>";
+    str_show += "<th style='padding:4px 10px 4px 5px;'>Baseline</th>";
+    str_show += "<th style='padding:4px 10px 4px 5px;'>Amplitude</th>";
+    //str_show += "</tr>";
+    $.ajax({
+      type: "POST",
+      url: "/get_ajax/",
+      data: { age: age, ba_select: org_select, gene: gene, sex: sex },
+      dataType: "json",
+      beforeSend: function () { $('#wait').show(); },
+      complete: function () { $('#wait').hide(); },
+      success: function (data) {
+        //console.log(data);
+        if(sex=="X" && age==-1)
+        {
+          amplitude = data["t1"]["amplitude"];
+          base = data["t1"]["baseline"];
+          phase = data["t1"]["shift"];
+          period = data["t1"]["frequence"];
+          str_show += "<tr>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + data["t1"]["gene"] + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + "-" + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + period + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + phase + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + base + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + amplitude + "</td>";
+        str_show += "</tr>";
+          var x = []
+          var y = []
+          for (var s = -6; s < 18; s += 0.1) {
+            x.push(Number(amplitude) * Math.sin(2 * Math.PI * Number(period) * (s / 24) + Number(phase)) + Number(base))
+            y.push(s)
+          }
+
+         tp1 = { x: y, y: x, mode: 'lines', name: " Gene:" + gene, line: { color: 'blue' } };
+         tp.push(tp1);
+         point_x = data["t1"]["point_x"];
+          point_y = data["t1"]["point_y"];
+          var tp2 = { x: point_x, y: point_y,  mode: 'markers', name: "Gene:" + gene, line: { color: 'blue' } };
+          tp.push(tp2);
+        }
+        else if (sex == "X" && age !=-1) {
+          amplitude = data["t1"]["amplitude"];
+          base = data["t1"]["baseline"];
+          phase = data["t1"]["shift"];
+          period = data["t1"]["frequence"];
+          str_show += "<tr>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + data["t1"]["gene"] + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + "Age:0-" + age + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + period + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + phase + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + base + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + amplitude + "</td>";
+        str_show += "</tr>";
+          var x = []
+          var y = []
+          for (var s = -6; s < 18; s += 0.1) {
+            x.push(Number(amplitude) * Math.sin(2 * Math.PI * Number(period) * (s / 24) + Number(phase)) + Number(base))
+            y.push(s)
+          }
+
+         tp1 = { x: y, y: x, mode: 'lines', name: "Age:0-" + age + " Gene:" + gene, line: { color: 'blue' } };
+         tp.push(tp1);
+
+         point_x = [];
+         point_y = [];
+         amplitude = data["t2"]["amplitude"];
+         base = data["t2"]["baseline"];
+         phase = data["t2"]["shift"];
+         period = data["t2"]["frequence"];
+        str_show += "<tr>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + data["t1"]["gene"] + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + "Age:" + (Number(age)+1) + "-100"  + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + period + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + phase + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + base + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + amplitude + "</td>";
+        str_show += "</tr>";
+          x = []
+          y = []
+          for (var s = -6; s < 18; s += 0.1) {
+            x.push(Number(amplitude) * Math.sin(2 * Math.PI * Number(period) * (s / 24) + Number(phase)) + Number(base))
+            y.push(s)
+          }
+          tp1 = { x: y, y: x, type: 'lines', mode: 'makers', name: "Age:" + (Number(age)+1) + "-100 Gene:" + gene, marker: { color: col[0] } };
+          tp.push(tp1);
+
+          point_x = data["t1"]["point_x"];
+          point_y = data["t1"]["point_y"];
+          var tp2 = { x: point_x, y: point_y,  mode: 'markers', name: "Age:0-" + age + " Gene:" + gene, line: { color: 'blue' } };
+          tp.push(tp2);
+
+          point_x = data["t2"]["point_x"];
+          point_y = data["t2"]["point_y"];
+          tp2 = { x: point_x, y: point_y,  mode: 'markers', name: "Age:" + (Number(age)+1) + "-100 Gene:" + gene, marker: { color: col[0] } };
+          tp.push(tp2);
+
+          str_show+="</table>";
+        }
+        if (sex == "M" || sex=="M,F" && age==-1) {
+          amplitude = data["t3"]["amplitude"];
+          base = data["t3"]["baseline"];
+          phase = data["t3"]["shift"];
+          period = data["t3"]["frequence"];
+          var x = []
+          var y = []
+          for (var s = -6; s < 18; s += 0.1) {
+            x.push(Number(amplitude) * Math.sin(2 * Math.PI * Number(period) * (s / 24) + Number(phase)) + Number(base))
+            y.push(s)
+          }
+          str_show += "<tr>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + data["t3"]["gene"] + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + "Sex:M" +"</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + period + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + phase + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + base + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + amplitude + "</td>";
+        str_show += "</tr>";
+
+          tp1 = { x: y, y: x, mode: 'lines', name:  "Gene:" + gene + " Sex:M", marker: { color: col[0] } };
+          tp.push(tp1);
+          
+          point_x = data["t3"]["point_x"];
+          point_y = data["t3"]["point_y"];
+          tp2 = { x: point_x, y: point_y, type: 'scatter', mode: 'markers', name: "Gene:" + gene + " Sex:M", marker: { color: col[0] } };
+          tp.push(tp2);
+        }
+        if (sex == "F" || sex=="M,F" && age==-1) {
+          amplitude = data["t4"]["amplitude"];
+          base = data["t4"]["baseline"];
+          phase = data["t4"]["shift"];
+          period = data["t4"]["frequence"];
+          var x = []
+          var y = []
+          for (var s = -6; s < 18; s += 0.1) {
+            x.push(Number(amplitude) * Math.sin(2 * Math.PI * Number(period) * (s / 24) + Number(phase)) + Number(base))
+            y.push(s)
+          }
+          var tp1 = { x: y, y: x, mode: 'lines', name: "Gene:" + gene + " Sex:F", marker: { color: col[1] } };
+          tp.push(tp1);
+          str_show += "<tr>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + data["t4"]["gene"] + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + "Sex:F" +"</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + period + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + phase + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + base + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + amplitude + "</td>";
+        str_show += "</tr>";
+          
+          point_x = data["t4"]["point_x"];
+          point_y = data["t4"]["point_y"];
+          tp2 = { x: point_x, y: point_y, type: 'scatter', mode: 'markers', name: "Gene:" + gene + " Sex:F", marker: { color: col[1] } };
+          tp.push(tp2);
+
+        }
+        if(sex == "M" && age!=-1)
+        {
+          amplitude = data["t1"]["amplitude"];
+          base = data["t1"]["baseline"];
+          phase = data["t1"]["shift"];
+          period = data["t1"]["frequence"];
+          var x = []
+          var y = []
+          for (var s = -6; s < 18; s += 0.1) {
+            x.push(Number(amplitude) * Math.sin(2 * Math.PI * Number(period) * (s / 24) + Number(phase)) + Number(base))
+            y.push(s)
+          }
+          str_show += "<tr>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + data["t1"]["gene"] + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + "Age:0-" +age+" Sex:M" +"</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + period + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + phase + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + base + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + amplitude + "</td>";
+        str_show += "</tr>";
+
+          tp1 = { x: y, y: x, mode: 'lines', name:  "Age:0-" +age+ " Gene:" + gene + " Sex:M", marker: { color: col[0] } };
+          tp.push(tp1);
+          
+          amplitude = data["t2"]["amplitude"];
+          base = data["t2"]["baseline"];
+          phase = data["t2"]["shift"];
+          period = data["t2"]["frequence"];
+          var x = []
+          var y = []
+          for (var s = -6; s < 18; s += 0.1) {
+            x.push(Number(amplitude) * Math.sin(2 * Math.PI * Number(period) * (s / 24) + Number(phase)) + Number(base))
+            y.push(s)
+          }
+          str_show += "<tr>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + data["t2"]["gene"] + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + "Age:" +(Number(age)+1)+ "-100"+" Sex:M" +"</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + period + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + phase + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + base + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + amplitude + "</td>";
+        str_show += "</tr>";
+
+          tp1 = { x: y, y: x, mode: 'lines', name:  "Age:" +(Number(age)+1)+ "-100 Gene:" + gene + " Sex:M", marker: { color: col[2] } };
+          tp.push(tp1);
+          point_x = data["t1"]["point_x"];
+          point_y = data["t1"]["point_y"];
+          tp2 = { x: point_x, y: point_y, type: 'scatter', mode: 'markers', name: "Age:0-" +age+ " Gene:" + gene + " Sex:M", marker: { color: col[0] } };
+          tp.push(tp2);
+          point_x = data["t2"]["point_x"];
+          point_y = data["t2"]["point_y"];
+          tp2 = { x: point_x, y: point_y, type: 'scatter', mode: 'markers', name: "Age:" +(Number(age)+1)+ "-100 Gene:" + gene + " Sex:M", marker: { color: col[2] } };
+          tp.push(tp2);
+        }
+        if (sex == "F" && age!=-1)
+        {
+          amplitude = data["t3"]["amplitude"];
+          base = data["t3"]["baseline"];
+          phase = data["t3"]["shift"];
+          period = data["t3"]["frequence"];
+          var x = []
+          var y = []
+          for (var s = -6; s < 18; s += 0.1) {
+            x.push(Number(amplitude) * Math.sin(2 * Math.PI * Number(period) * (s / 24) + Number(phase)) + Number(base))
+            y.push(s)
+          }
+          str_show += "<tr>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + data["t3"]["gene"] + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + "Age:0-" +age+" Sex:F" +"</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + period + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + phase + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + base + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + amplitude + "</td>";
+        str_show += "</tr>";
+
+          tp1 = { x: y, y: x, mode: 'lines', name:  "Age:0-" +age+ " Gene:" + gene + " Sex:F", marker: { color: col[0] } };
+          tp.push(tp1);
+          
+          amplitude = data["t4"]["amplitude"];
+          base = data["t4"]["baseline"];
+          phase = data["t4"]["shift"];
+          period = data["t4"]["frequence"];
+          var x = []
+          var y = []
+          for (var s = -6; s < 18; s += 0.1) {
+            x.push(Number(amplitude) * Math.sin(2 * Math.PI * Number(period) * (s / 24) + Number(phase)) + Number(base))
+            y.push(s)
+          }
+          str_show += "<tr>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + data["t4"]["gene"] + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + "Age:" +(Number(age)+1)+ "-100"+" Sex:F" +"</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + period + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + phase + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + base + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + amplitude + "</td>";
+        str_show += "</tr>";
+
+          tp1 = { x: y, y: x, mode: 'lines', name:  "Age:" +(Number(age)+1)+ "-100 Gene:" + gene + " Sex:F", marker: { color: col[2] } };
+          tp.push(tp1);
+          point_x = data["t3"]["point_x"];
+          point_y = data["t3"]["point_y"];
+          tp2 = { x: point_x, y: point_y, type: 'scatter', mode: 'markers', name: "Age:0-" +age+ " Gene:" + gene + " Sex:F", marker: { color: col[0] } };
+          tp.push(tp2);
+          point_x = data["t4"]["point_x"];
+          point_y = data["t4"]["point_y"];
+          tp2 = { x: point_x, y: point_y, type: 'scatter', mode: 'markers', name: "Age:" +(Number(age)+1)+ "-100 Gene:" + gene + " Sex:F", marker: { color: col[2] } };
+          tp.push(tp2);
+        }
+        if(sex!="X"&&age!=-1&&sex!="M"&&sex!="F")//age+sex
+        {
+          amplitude = data["t1"]["amplitude"];
+          base = data["t1"]["baseline"];
+          phase = data["t1"]["shift"];
+          period = data["t1"]["frequence"];
+          var x = []
+          var y = []
+          for (var s = -6; s < 18; s += 0.1) {
+            x.push(Number(amplitude) * Math.sin(2 * Math.PI * Number(period) * (s / 24) + Number(phase)) + Number(base))
+            y.push(s)
+          }
+
+          str_show += "<tr>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + data["t1"]["gene"] + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + "Age:0-" + age + " Sex:M"+"</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + period + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + phase + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + base + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + amplitude + "</td>";
+        str_show += "</tr>";
+
+          tp1 = { x: y, y: x, mode: 'lines', name: "Age:" + "0-" + age + " Gene:" + gene + " Sex:M", marker: { color: col[0] } };
+          tp.push(tp1);
+          
+          amplitude = data["t2"]["amplitude"];
+          base = data["t2"]["baseline"];
+          phase = data["t2"]["shift"];
+          period = data["t2"]["frequence"];
+          x = []
+          y = []
+          for (var s = -6; s < 18; s += 0.1) {
+            x.push(Number(amplitude) * Math.sin(2 * Math.PI * Number(period) * (s / 24) + Number(phase)) + Number(base))
+            y.push(s)
+          }
+          str_show += "<tr>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + data["t1"]["gene"] + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + "Age:" + (Number(age)+1) + "-100" + " Sex:M"+"</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + period + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + phase + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + base + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + amplitude + "</td>";
+        str_show += "</tr>";
+          tp1 = { x: y, y: x, mode: 'lines', name: "Age:" + (Number(age)+1) + "-100" + " Gene:" + gene + " Sex:M", marker: { color: col[1] } };
+          tp.push(tp1);
+
+
+          amplitude = data["t3"]["amplitude"];
+          base = data["t3"]["baseline"];
+          phase = data["t3"]["shift"];
+          period = data["t3"]["frequence"];
+          x = []
+          y = []
+          for (var s = -6; s < 18; s += 0.1) {
+            x.push(Number(amplitude) * Math.sin(2 * Math.PI * Number(period) * (s / 24) + Number(phase)) + Number(base))
+            y.push(s)
+          }
+          str_show += "<tr>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + data["t1"]["gene"] + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + "Age:0-" + age  + " Sex:F"+"</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + period + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + phase + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + base + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + amplitude + "</td>";
+        str_show += "</tr>";
+          tp1 = { x: y, y: x, mode: 'lines', name: "Age:" + "0-" + age + " Gene:" + gene + " Sex:F", marker: { color: col[2] } };
+          tp.push(tp1);
+          
+
+          amplitude = data["t4"]["amplitude"];
+          base = data["t4"]["baseline"];
+          phase = data["t4"]["shift"];
+          period = data["t4"]["frequence"];
+          var x = []
+          var y = []
+          for (var s = -6; s < 18; s += 0.1) {
+            x.push(Number(amplitude) * Math.sin(2 * Math.PI * Number(period) * (s / 24) + Number(phase)) + Number(base))
+            y.push(s)
+          }
+          str_show += "<tr>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + data["t1"]["gene"] + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + "Age:" + (Number(age)+1)  + "-100 Sex:F"+"</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + period + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + phase + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + base + "</td>";
+        str_show += "<td style='padding:4px 10px 4px 5px;'>" + amplitude + "</td>";
+        str_show += "</tr>";
+          tp1 = { x: y, y: x, mode: 'lines', name: "Age:" + (Number(age)+1) + "-100" + " Gene:" + gene + " Sex:F", marker: { color: col[3] } };
+          tp.push(tp1);
+
+
+          
+          point_x = data["t1"]["point_x"];
+          point_y = data["t1"]["point_y"];
+          tp2 = { x: point_x, y: point_y, type: 'scatter', mode: 'markers', name: "Age:" + "0-" + age + " Gene:" + gene + " Sex:M", marker: { color: col[0] } };
+          tp.push(tp2);
+          point_x = data["t2"]["point_x"];
+          point_y = data["t2"]["point_y"];
+          tp2 = { x: point_x, y: point_y, type: 'scatter', mode: 'markers', name: "Age:" + (Number(age) + 1) + "-100" + " Gene:" + gene + " Sex:M", marker: { color: col[1] } };
+          tp.push(tp2);
+          point_x = data["t3"]["point_x"];
+          point_y = data["t3"]["point_y"];
+          tp2 = { x: point_x, y: point_y, type: 'scatter', mode: 'markers', name: "Age:" + "0-" + age + " Gene:" + gene + " Sex:F", marker: { color: col[2] } };
+          tp.push(tp2);
+          point_x = data["t4"]["point_x"];
+          point_y = data["t4"]["point_y"];
+          tp2 = { x: point_x, y: point_y, type: 'scatter', mode: 'markers', name: "Age:" + (Number(age) + 1) + "-100 Gene:" + gene + " Sex:F", marker: { color: col[3] } };
+          tp.push(tp2);
+
+          //R_square = R_square.toFixed(4);
+          //str_show += "<tr><td>   " + age + " </td><td> mean = " + mean + " </td><td> R_square =" + R_square + "</td></tr>";
+        }
+        str_show += "</table>";
+        $('#show').append(str_show);
+        var layout = {
+          title: 'Circadian'
+        };
+
+        Plotly.newPlot('myDiv', tp, layout);
+      }
+
+    });  
+
+
+      
+
+    }
+
+    function getlist() {
+      $('#org_div').html("");
+      $('#genename_div').html("");
+
+      var gene_id = {{ gene | safe}};
+    var orgstr, orgstr1, istr;
+    var geneidstr, genenamestr, genenamestr1;
+    //istr="<input type='search' placeholder='Enter tissue' onfocus='this.placeholder=''' onblur='this.placeholder='Enter tissue''>";
+    orgstr = "<font>Select tissue:</font><input type='text' list='genelist_0' id='genelist0' onblur='this.placeholder='Quick search using tissue keywords'' multiple><datalist id='genelist_0' >";
+    //geneidstr = "<font size=3>請選擇基因編號:</font><input type='text' list='' id='genelist2' multiple>"
+    //console.log(gene_id);
+    genenamestr = "<font>Select gene:</font><input type='text' list='genelist_1' id='genelist1' multiple><datalist id='genelist_1'>";
+    o = ["BA11", "BA47"];
+    for (var i = 0; i < 2; i++) {
+      orgstr += "<option value='" + o[i] + "'>" + o[i] + "</option>";
+    }
+    for (var i = 0; i < (gene_id.length); i++) {
+      genenamestr += "<option value='" + gene_id[i] + "'>" + gene_id[i] + "</option>";
+    }
+    genenamestr += "</datalist>";
+    orgstr += "</datalist>";
+    $('#org_div').append(orgstr);
+    $('#geneid_div').append(genenamestr);
+    //$('#input').append(istr);
+    }
+
+  </script>
+
+  </center>
+  </div>
+</body>
+
+</html>

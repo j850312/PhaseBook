@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <title>Title</title>
+  <style>
+    body {
+      margin: 10px;
+      padding: 0px;
+    }
+
+    #myCanvas {
+      border: 1px solid #666666;
+    }
+  </style>
+</head>
+
+<body onload="init();">
+  <div class="row">
+    <div id="show"></div>
+    <div id="org_div"></div>
+    <div id="genename_div"></div>
+    <div id="geneid_div"></div>
+    <div class="box box-default">
+      <button class="btn btn-app" type="button" onclick="getcheck(0);"><i class="fa fa-search"></i>畫圖
+
+      </button>
+    </div>
+     <div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-1.2.0.min.js"></script>
+  <script type="text/javascript" src="E_9_1.js"></script>
+  <script language="JavaScript" type="text/javascript">
+    var count=2;
+    var ct=1;
+    function init() {
+      getlist();
+    }
+
+
+
+    function submit() {
+        var Total_Obj = document.getElementsByName("location1");
+
+        for (var i = 0; i < Total_Obj.length; i++) {
+            if (Total_Obj[i].type == "radio") {
+                if (Total_Obj[i].checked) {
+                        return parseInt(Total_Obj[i].value);
+                }
+            }
+        }
+    }
+
+     let findKey = (value, compare = (a, b) => a === b) =>{
+     var ogdic={{ogdic|safe}};
+      return Object.keys(ogdic).find(k => compare(ogdic[k], value))
+    }
+    let findKey1 = (value, compare = (a, b) => a === b) =>{
+     var gndic={{gndic|safe}};
+      return Object.keys(gndic).find(k => compare(gndic[k], value))
+    }
+    function getcheck(check)
+    {
+      if(check==0)
+      {
+      $('#myDiv').html("");
+      var chk_value = [];//定義一個陣列
+      $('input[name="location"]:checked').each(function () {
+        chk_value.push($(this).val());
+      });
+          draw(chk_value,0);
+      }
+      else
+      {
+        $('#myDiv1').html("");
+        var test=[];
+        console.log(ct);
+        for(var i=1;i<ct;i++)
+        {
+          var str="genelistt"+i;
+          var gene=document.getElementById(str).value;;
+          test.push(gene);
+        }
+        draw(test,1);
+      }
+    }
+
+    function draw(chk_value,check) {
+      var ogdic={{ogdic|safe}};
+      var genedic={{genedic|safe}};
+      //var og=document.getElementByName("location").value;
+      //var og=submit();
+      var tp=[];
+      if(check==0)
+      {
+        for(var i=0;i<chk_value.length;i++)
+      {
+        var gene= document.getElementById("genelistt0").value;
+        var og=chk_value[i];
+        var data=JSON.parse({{data|safe}});
+        //amplitude*sin(2拍(i+phase)*period)+base
+        var period=data["data"][genedic[gene]+1][Number(og)+2];
+        var phase=data["data"][genedic[gene]+1][Number(og)+3];
+        var base=data["data"][genedic[gene]+1][Number(og)+4];
+        var amplitude=data["data"][genedic[gene]+1][Number(og)+5];
+        console.log(period);
+        console.log(phase);
+        console.log(base);
+        console.log(amplitude);
+        var x=[]
+        var y=[]
+        for(var s=0;s<24;s+=0.1)
+      {
+      x.push(Number(amplitude)*Math.sin(2*Math.PI*(s-Number(phase))/24*Number(period)/24)+Number(base))
+      //x.push(amplitude*Math.sin(2*Math.PI*(i-phase)/24*period/24)+base)
+      y.push(s)
+      }
+
+    var tp1={x:y,y:x,mode: 'lines',name:str};
+        tp.push(tp1);
+    }
+    var trace1 = {x: y,y: x,mode: 'lines'};
+    var layout = {
+    title:'Line and Scatter Plot'
+    };
+
+     Plotly.newPlot('myDiv', tp, layout);
+    }
+
+
+    }
+    function getidlist(id,check){
+      console.log(id,check);
+      var gene_id = {{ gene_id| safe}};
+      var gene_name = {{ gene_name| safe}};
+      let findkey = (value, compare = (a, b) => a === b) =>{
+      return Object.keys(gndic).find(k => compare(gndic[k], value))
+    }
+      var str="";
+      if(check==0)
+      {
+        str="<font size=3>請選擇基因編號:</font><input type='text' list='geneidlist0' id='genelistt0' multiple>";
+        str+="<datalist id='geneidlist0' name='geneidlist'>";
+      }
+
+      var ans=gndic[id];
+      for(var i=0;i<ans.length;i++)
+      {
+        str+="<option value='" + ans[i] + "'>" + ans[i] + "</option>";
+        //console.log(ans[i]);
+      }
+      str+="</datalist><br>";
+      //console.log(str);
+      if(check==0)
+      {
+        $('#geneid_div').html("");
+        $('#geneid_div').append(str);
+      }
+    }
+    function getlist() {
+      $('#org_div').html("");
+      $('#genename_div').html("");
+
+    var gene_name = {{ gene_name| safe}};
+    var organization = {{ organization| safe}};
+    var ogdic={{ogdic|safe}};
+    var orgstr,orgstr1;
+    var temp;
+    var geneidstr,genenamestr,genenamestr1;
+
+    orgstr = "<form>請選擇組織:<br>";
+    //geneidstr = "<font size=3>請選擇基因編號:</font><input type='text' list='' id='genelist2' multiple>"
+
+    genenamestr = "<font size=3>請選擇基因名字:</font><input type='text' list='genelist_0' id='genelist0' onchange='getidlist(this.value,0);' multiple><datalist id='genelist_0'  onchange='getidlist(this.value,0);'>";
+    genenamestr += "<option value=''>請選擇基因</option>";
+    for (var i = 0; i < (organization.length); i++) {
+      temp=ogdic[organization[i]];
+      if(i!=0&&i%4==0)
+      {
+        orgstr+="<br>";
+      }
+      orgstr+= "<label><input type='checkbox'"+"style='vertical-align:middle'" +"name='location' value='" +temp+ "'>" +organization[i]+"</label>"+"\t";
+    }
+    for (var i = 0; i < (gene_id.length); i++) {
+      genenamestr += "<option value='" + gene_id[i] + "'>" + gene_id[i] + "</option>";
+    }
+    orgstr += "</form>";
+    genenamestr += "</datalist>";
+    $('#org_div').append(orgstr);
+    $('#genename_div').append(genenamestr);
+
+    }
+
+  </script>
+
+</body>
+
+</html>

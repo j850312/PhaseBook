@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+
+  <style>
+    body {
+      margin: 10px;
+      padding: 0px;
+    }
+
+    #myCanvas {
+      border: 1px solid #666666;
+    } 
+  </style>
+
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet"
+        href="/static/main.css">
+  
+  
+  
+      <!--[if lt IE 9]>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+  
+  
+  
+      <!-- Bootstrap -->
+      <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet"
+        href="/static/main.css">
+</head>
+
+<body class='span-18 last container' style='margin:auto;'>
+  <nav class="navbar navbar-default">
+
+      <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a  style="font-size: 16px  !important;" class="navbar-brand" href="/"><font color="#457ab2">P</font>hase<font color="#457ab2">B</font>ook</a>
+      </div>
+  
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a href="/about">About</a></li>
+          <li><a href="/datasets">Human</a></li>
+          <li><a href="/datasets">Baboon</a></li>
+
+          <!-- <li><a href="/networkArch">Network Architecture</a></li> -->
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <!-- 
+          <li><a href="/login">Login</a></li>
+           -->
+          <li><a href="/help">Help</a></li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+
+  <div class="container-fluid">
+    <center>
+
+    <title>Phasebook</title>
+    
+  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <h1 style="font-size:70px"><font color="#457ab2">P</font>hase<font color="#457ab2">B</font>ook</h1>
+  
+    <h4>A Web Portal for Circadian Omic </h4><br><br>
+    </center>
+  </div>
+
+
+  <div class='content span-18 last'>
+    <div class='span-3 last' style=' padding: 5px;'>
+      <table>
+        <tr>
+          <th>
+            <a href='#querying'>Queriyng</a>
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <a href='#simple'>- Simple Search</a>
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <a href='#advanced'>- Advanced Search</a>
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <a href='#probability'>- Probability</a>
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <a href='#results'>Results</a>
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <a href='#human'>- Human</a>
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <a href='#mouse'>- Mouse</a>
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <a href='#faq'>FAQ</a>
+          </th>
+        </tr>
+      </table>
+    </div>
+    <div class='span-14 last' style='border-left: 2px double #E5ECF9; padding: 13px;'>
+      <h1>
+        CIRCA Help
+      </h1>
+      <p>
+        Welcome to the CIRCA help page. Here you will find all the information
+        you need for a successful search.
+      </p>
+      <h2>
+        <a name='querying' style='color:#111;'>Querying CircaDB</a>
+      </h2>
+      <p>
+        There are three modes of querying CircaDB:
+        By gene symbol,
+        <a href='#simple'>Simple</a>
+        and
+        <a href='#advanced'>Advanced.</a>
+        In all three modes using the wildcard character "*" is possible.
+      </p>
+      <h3>
+        <a name='simple' style='color:#111;'>Simple Query Mode</a>
+      </h3>
+      <p>
+        This is the default. Simply enter a set of terms and the engine will query for
+        each term separately, then join all of the results from each separate term together
+        into the final result. In other words a query for <code>kinase inhibitor</code>
+        will return all entries with the word <code>kinase</code> together with any entry
+        that has <code>inhibitor</code> in their respective annotations.
+      </p>
+      <p>
+        This is usually not what one would want returned from such a query. This is where
+        the advanced query mode comes in.
+      </p>
+      <h3>
+        <a name='advanced' style='color:#111;'>Advanced Query Mode</a>
+      </h3>
+      <p>
+        Once the "advanced query mode" check-box has been selected, the query strings
+        are no longer simply split into individual queries. As the saying goes "with
+        great power comes great responsibility". In a nutshell, you must now use the
+        underlying Sphinx search engine's
+        <a href='http://sphinxsearch.com/docs/2.0.5/extended-syntax.html'>extended syntax query mode.</a>
+      </p>
+      <p>
+        Briefly, the default behavior of the query <code>kinase inhibitor</code> would bring
+        back all entries that match both <code>kinase <b> AND </b> inhibitor</code>.
+        Instead of an implicit <code>OR</code> between terms, there is now an implicit
+        <code>AND</code> between terms.
+      </p>
+      <p>
+        To bring back the <code>OR</code> behavior you would need to separate terms
+        with a <code>|</code> (a vertical bar, or "pipe") character. E.g.
+        <code> kinase | inhibitor</code>.
+      </p>
+      <p>
+        To bring back the specific phrase "kinase inhibitor", you would need to
+        surround both words with quotes. E.g. <code>"kinase inhibitor"</code>
+      </p>
+      <h4>More examples</h4>
+      <p>
+        <em>Query for the exact phrase "kinase inhibitor" that also make mention of "mitochondrial"</em>
+        <br>
+        <code>"kinase inhibitor" mitochondrial</code>
+      </p>
+      <p>
+        <em>Query for kinases, but not any entry with "inhibitor" in the record</em>
+        <br>
+        <code>kinase !inhibitor</code>
+      </p>
+      <h4>Even more examples</h4>
+      <p>
+        Sphinx is a large a powerful system. You can review all of the various
+        ways to use the extended syntax at the
+        <a href='http://sphinxsearch.com/docs/2.0.4/extended-syntax.html'>Sphinx extended query syntax help page</a>
+      </p>
+      <h4>CircaDB Query Fields</h4>
+      <p>
+        Having read the above, you may be wondering what fields you can use to query CircaDB. The annotation is straight from the Affymetrix annotation files. We have pulled out certain columns from that file and indexed them as follows:
+      </p>
+      <table>
+        <tr>
+          <th>Field</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>probeset_name</td>
+          <td>The Affymetrix probeset name</td>
+        </tr>
+        <tr>
+          <td>transcript_id</td>
+          <td>The transcript ID</td>
+        </tr>
+        <tr>
+          <td>representative_public_id</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>unigene_id</td>
+          <td>Unigene ID</td>
+        </tr>
+        <tr>
+          <td>gene_symbol</td>
+          <td>NCBI gene symbol</td>
+        </tr>
+        <tr>
+          <td>gene_title</td>
+          <td>Full gene title</td>
+        </tr>
+        <tr>
+          <td>entrez_gene</td>
+          <td>The Entrez gene ID</td>
+        </tr>
+        <tr>
+          <td>swissprot</td>
+          <td>The SwisProt accession</td>
+        </tr>
+        <tr>
+          <td>refseq_protein_id</td>
+          <td>The RefSeq protein accession</td>
+        </tr>
+        <tr>
+          <td>refseq_transcript_id</td>
+          <td>The RefSeq NA sequence accession</td>
+        </tr>
+        <tr>
+          <td>target_description</td>
+          <td>The description from the Affymetrix annotation file</td>
+        </tr>
+      </table>
+      <h3>
+        <a name='probability' style='color:#111;'>Probability filter</a>
+      </h3>
+      <p>
+        The probability filter can be used to narrow the output to the most significant results. The database can be filtered for
+        <a href='#p-value'>p-values</a>
+        and
+        <a href='#p-value'>q-values</a>
+        produced by the different algorithms. The given value is used as the upper cutoff.
+      </p>
+      <h2>
+        <a name='results' style='color:#111;'>Understanding the results</a>
+      </h2>
+      <h2>
+        <a name='human' style='color:#111;'>Human</a>
+      </h2>
+      <p>
+        We have applied CYCLOPS (Anafi et al., PNAS 2017), an algorithm designed to reconstruct sample order
+        in the absence of time-of-day information, to the public GTEx collection (GTEx Consortium, Nat. Genet. 2013)
+        of 632 human donors contributing 4,292 RNA-seq samples from 13 distinct human tissue types.
+        Additional sample information can be found at GTEx’s documentation page:
+        <a href='https://gtexportal.org/home/documentationPage'>https://gtexportal.org/home/documentationPage.</a>
+      </p>
+      <p>
+        For each tissue that was CYCLOPS ordered, cosinor regression (modified, Anafi et al., PNAS 2017)
+        was used to test if individual genes are rhythmic or not. We only looked for rhythms with a period
+        of 24 hours. Gene-level expression data was filtered to exclude any gene with a read count of zero
+        (TPM = 0) in any sample. Following this, only the top 15,000 expressed genes by median TPM were
+        considered for each tissue.
+      </p>
+      <h3>
+        <a name='plot_human' style='color:#111;'>Plots</a>
+      </h3>
+      <p>
+        Each point represents a single human donor. The x-axis is the CYCLOPS-estimated
+        sample phase in radians (from 0 to 2𝝿). The y-axis is the expression level (TPM)
+        from RNAseq. Phase has been adjusted so that time 𝝿 represents E-box phase (i.e. time
+        of peak expression of E-box target genes NR1D1, NR1D2, and PER3).
+        <img alt="PLOT_HUMAN" width="550" height="200" src="/images/plot_human.png" />
+      </p>
+      <h3>
+        <a name='p-value_human' style='color:#111;'>P-value</a>
+      </h3>
+      <p>
+        The probability of seeing data at least this extreme given the null hypothesis is true – that the dataset is not rhythmic.
+      </p>
+      <h3>
+        <a name='FDR_human' style='color:#111;'>FDR</a>
+      </h3>
+      <p>
+        FDR is the ratio of false-positives to total genes discovered at a particular threshold.
+        This is an adjustment to P-value in order to control the number of false discoveries when
+        simultaneously testing multiple hypotheses (Benjamini & Hochberg, J. R. Stat. Soc. 1995).
+      </p>
+      <h3>
+        <a name='rSqr' style='color:#111;'>R<sup>2</sup> (Rsq)</a>
+      </h3>
+      <p>
+        Coefficient of determination from cosinor regression. This is a measure of how well
+        the data fit to a 24 hour sine wave. A value of 1 is perfect – all of the points line up on the curve.
+      </p>
+      <h3>
+        <a name='rAMP' style='color:#111;'>rAMP (relative amplitude)</a>
+      </h3>
+      <p>
+        A measure of the magnitude of oscillation (i.e., effect size).
+      </p>
+      <h3>
+        <a name='period' style='color:#111;'>Period</a>
+      </h3>
+      <p>
+        How often the cycle repeats. We tested only for patterns that repeat every 24 hours.
+      </p>
+      <h3>
+        <a name='phase' style='color:#111;'>Phase</a>
+      </h3>
+      <p>
+        Identifies the time of peak expression.
+      </p>
+      <h2>
+        <a name='mouse' style='color:#111;'>Mouse</a>
+      </h2>
+      <p>
+        There are three different algorithms to statistically test if a dataset
+        is cyclic or not. More information about these algorithms can be found
+        in the <a href="/about">About</a> tab.
+      </p>
+      <p>
+        <b>Note:</b>
+        <i>For all the algorithms we tested cyclic behavior for a range of different periods, except for the DeLichtenberg were we only looked for a period of 24 hours.</i>
+      </p>
+      <h3>
+        <a name='plot' style='color:#111;'>Plots</a>
+      </h3>
+      <p>
+        As result we will see a plot, where the X-axis is the time in
+        hours and the Y-axis reflects the expression levels measured
+        on the individual gene chips. The background shaded areas represent the cycle of light and dark conditions based on CT times.
+      </p>
+      <img alt="PLOT" src="/images/plot.png" />
+      <h3>
+        <a name='p-value' style='color:#111;'>p-Value</a>
+      </h3>
+      <p>
+        This statistical size, is the estimated probability of rejecting the null hypothesis. Here the null hypothesis is a dataset not being cyclic. The lower the p-value the more significant is the test result.
+      </p>
+      <h3>
+        <a name='q-value' style='color:#111;'>q-Value</a>
+      </h3>
+      <p>
+        The q-value of a test is the minimum false discovery rate at which a gene is mistakenly called cyclic.
+      </p>
+      <h3>
+        <a name='period' style='color:#111;'>Period</a>
+      </h3>
+      <p>
+        This value gives information on how often the cycle is repeated. Is the period
+        <i>24</i>
+        , the pattern reoccurs every 24 hours.
+      </p>
+      <h3>
+        <a name='phase' style='color:#111;'>Phase</a>
+      </h3>
+      <p>
+        The phase reflects the timing in the individual tissues. The DeLichtenberg algorithm does not provide this value in its output.
+      </p>
+      <h2>
+        <a name='faq' style='color:#111;'>Frequently asked questions</a>
+      </h2>
+      <table>
+        <tr>
+          <th>How do I select more than one experiment?</th>
+          <td>"Ctrl+Right Click" lets you select multiple experiments ("Command+Right Click" for mac users)</td>
+        </tr>
+        <tr>
+          <th>How do I request a data set be added to CircaDB?</th>
+          <td>
+            Researchers can request that a particular data set be added by submitting an issue at our project page hosted at
+            <a href='https://github.com/itmat/circadb/issues'>Github.</a>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class='span-20 last push-6' style='text-align:center; padding: 13px;'>
+      <p>
+        <a href='#top'>back to the top</a>
+      </p>
+    </div>
+  </div>
+  <div class='footer span-18 last'>
+    <ul id='nav'>
+      <li>
+        <a href='http://www.med.upenn.edu'>Penn Medicine</a>
+        |
+        <!-- %a(href="http://bioinf.itmat.upenn.edu/home.html") ITMAT Bioinformatics Facility -->
+        <a href='http://www.itmat.upenn.edu/bioinformatics.html'>ITMAT Bioinformatics Facility</a>
+      </li>
+    </ul>
+  </div>
+  <div class='tail span-18 last'>
+    <a href="http://www.nhlbi.nih.gov/"><img alt="CIRCA" src="/images/NHLBI.png" /></a>
+  </div>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-1.2.0.min.js"></script>
+  <script type="text/javascript" src="E_9_1.js"></script>
+  <script language="JavaScript" type="text/javascript">
+    var count=2;
+    var ct=1;
+    function init() {
+      getlist();
+    }
+    function set(i) {
+      if(i==0)
+      {
+        var t=document.getElementById("tiss");
+        var str1=document.getElementById("tiss").value;
+        var tis= document.getElementById("genelist0").value;
+
+          str1+=","+tis;
+        t.value=str1;
+      }
+      else{
+        var t=document.getElementById("gene_name");
+        var str2=document.getElementById("gene_name").value;
+        var gene= document.getElementById("genelist1").value;
+
+          str2+=","+gene;
+        
+        t.value=str2;
+      }
+    }
+
+     let findKey = (value, compare = (a, b) => a === b) =>{
+     var ogdic={{ogdic|safe}};
+      return Object.keys(ogdic).find(k => compare(ogdic[k], value))
+    }
+    let findKey1 = (value, compare = (a, b) => a === b) =>{
+     var gndic={{gndic|safe}};
+      return Object.keys(gndic).find(k => compare(gndic[k], value))
+    }
+    function getcheck(check)
+    {
+      if(check==0)
+      {
+      $('#myDiv').html("");
+      var chk_value = [];//定義一個陣列
+      $('input[name="location"]:checked').each(function () {
+        chk_value.push($(this).val());
+      });
+          draw(chk_value,0);
+      }
+      else
+      {
+        $('#myDiv1').html("");
+        var test=[];
+        console.log(ct);
+        for(var i=1;i<ct;i++)
+        {
+          var str="genelistt"+i;
+          var gene=document.getElementById(str).value;;
+          test.push(gene);
+        }
+        draw(test,1);
+      }
+    }
+    function plot(){
+      var str1=document.getElementById("tiss").value;
+      var str2=document.getElementById("gene_name").value;
+      var data=JSON.parse({{data|safe}});
+      var ogdic={{ogdic|safe}};
+      var genedic={{genedic|safe}};
+      var name_tis=new Array();
+      var name_gene=new Array();
+      var tp=[];
+      //console.log(typeof(str1));
+      name_tis=str1.split(",");
+      name_gene=str2.split(",");
+      for(var i=0;i<name_gene.length;i++)
+      {
+        for(var j=0;j<name_tis.length;j++)
+        {
+          var period=data["data"][genedic[name_gene[i]]+1][ogdic[name_tis[j]]+2];
+          var phase=data["data"][genedic[name_gene[i]]+1][ogdic[name_tis[j]]+3];
+          var base=data["data"][genedic[name_gene[i]]+1][ogdic[name_tis[j]]+4];
+          var amplitude=data["data"][genedic[name_gene[i]]+1][ogdic[name_tis[j]]+5];
+          console.log(period+","+phase+","+base+","+amplitude);
+          var x=[]
+        var y=[]
+        for(var s=0;s<24;s+=0.1)
+      {
+      x.push(Number(amplitude)*Math.sin(2*Math.PI*(s-Number(phase))/24*Number(period)/24)+Number(base))
+      //x.push(amplitude*Math.sin(2*Math.PI*(i-phase)/24*period/24)+base)
+      y.push(s)
+      }
+
+
+    var tp1={x:y,y:x,mode: 'lines',name:name_tis[j]+","+name_gene[i]};
+        tp.push(tp1);
+      //document.write(str1.split(",")+"<p>");
+        }
+      }
+    var trace1 = {x: y,y: x,mode: 'lines'};
+    var layout = {
+    title:'Line and Scatter Plot'
+    };
+
+     Plotly.newPlot('myDiv', tp, layout);
+    }
+    
+    function getlist() {
+      $('#org_div').html("");
+      $('#genename_div').html("");
+
+    var gene_id = {{ gene_id| safe}};
+    var organization = {{ organization| safe}};
+
+    var ogdic={{ogdic|safe}};
+    var orgstr,orgstr1,istr;
+    var temp;
+    var geneidstr,genenamestr,genenamestr1;
+    //istr="<input type='search' placeholder='Enter tissue' onfocus='this.placeholder=''' onblur='this.placeholder='Enter tissue''>";
+    orgstr = "<font>Tissue quick search:</font><input type='text' list='genelist_0' id='genelist0' onblur='this.placeholder='Quick search using tissue keywords'' multiple><datalist id='genelist_0' >";
+    //geneidstr = "<font size=3>請選擇基因編號:</font><input type='text' list='' id='genelist2' multiple>"
+
+    genenamestr = "<font>Gene quick search:</font><input type='text' list='genelist_1' id='genelist1' multiple><datalist id='genelist_1'>";
+
+    for (var i = 0; i < (organization.length); i++) {
+      temp=ogdic[organization[i]];
+
+      orgstr+="<option value='" + organization[i] + "'>" + organization[i] + "</option>";
+    
+    }
+    for (var i = 0; i < (gene_id.length); i++) {
+      genenamestr += "<option value='" + gene_id[i] + "'>" + gene_id[i] + "</option>";
+    }
+    genenamestr += "</datalist>";
+    orgstr+="</datalist>";
+    $('#org_div').append(orgstr);
+    $('#geneid_div').append(genenamestr);
+    //$('#input').append(istr);
+    }
+
+    </script>
+  
+
+</body>
+
+</html>
